@@ -25,21 +25,38 @@ model user {
 }
 
 model book {
-  id              String   @id @db.Uuid
-  title           String
-  numberOfVolumes Int?     @map("number_of_volumes")
-  userId          String   @db.Uuid @map("user_id")
-  user            user     @relation(fields: [userId], references: [id])
-  storageId       String?  @db.Uuid @map("storage_id")
-  storage         storage? @relation(fields: [storageId], references: [id])
+  id        String   @id @db.Uuid
+  title     String
+  tagId     String?  @db.Uuid @map("tag_id")
+  tag       tag?     @relation(fields: [tagId], references: [id])
+  price     String?  @map("price")
+  userId    String   @db.Uuid @map("user_id")
+  user      user     @relation(fields: [userId], references: [id])
+  storageId String?  @db.Uuid @map("storage_id")
+  storage   storage? @relation(fields: [storageId], references: [id])
+  addedAt   DateTime @default(now()) @map("added_at") @db.Timestamptz(0)
+  updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamptz(0)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(0)
 
   @@map("books")
 }
 
 model storage {
-  id    String  @id @db.Uuid
-  name  String?
-  books book[]
+  id        String   @id @db.Uuid
+  name      String?
+  updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamptz(0)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(0)
+  books     book[]
 
   @@map("storages")
+}
+
+model tag {
+  id        String   @id @db.Uuid
+  name      String
+  updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamptz(0)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(0)
+  books     book[]
+
+  @@map("tags")
 }
